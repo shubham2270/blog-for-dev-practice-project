@@ -1,7 +1,15 @@
 import Head from "next/head";
+import Link from "next/link";
+import { PencilIcon } from "@heroicons/react/outline";
+import { useSession, signIn } from "next-auth/react";
+
+import React from "react";
+
 import Layout from "../sections/Layout";
 
-export default function Home() {
+function Home() {
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
   return (
     <div>
       <Layout>
@@ -13,12 +21,22 @@ export default function Home() {
             </h1>
             <h2>Start your developer blog, share ideas & connect!</h2>
           </div>
-
-          <button onClick={null} className='bg-blue-600 text-white px-6'>
-            Start you blog for free
-          </button>
+          {loading ? null : !session ? (
+            <button onClick={null} className='bg-blue-600 text-white px-6'>
+              Start you blog for free
+            </button>
+          ) : (
+            <Link href='/'>
+              <a>
+                <PencilIcon className='w-6 h-6 flex-shrink-0' />
+                <span>Write a blog post</span>
+              </a>
+            </Link>
+          )}
         </section>
       </Layout>
     </div>
   );
 }
+
+export default Home;
